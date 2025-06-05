@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mini_mart_app/common/utils/functions.dart';
+import 'package:mini_mart_app/common/utils/text_styles.dart';
 
 class Header extends StatelessWidget {
   final String address;
@@ -17,101 +18,111 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Column(
-      children: [
-        SizedBox(height: 20),
-        //Logo and address section
-        Container(
-          color: Colors.white,
-          margin: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Image.asset('assets/images/Logo.png', height: 30),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'DELIVERY ADDRESS',
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      letterSpacing: 1.4,
-                      fontWeight: FontWeight.w600,
-                      color: theme.colorScheme.onSurface.withOpacity(.6),
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    address,
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: theme.colorScheme.onSurface,
-                    ),
-                  ),
-                ],
-              ),
-              svgIcon(
-                assetName: 'notification',
-                size: 24,
-                color: theme.colorScheme.onSurface.withOpacity(.7),
-              ),
-            ],
-          ),
-        ),
-        //Search bar section
-        if (showSearchBar)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: TextField(
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: theme.colorScheme.surface,
-                hintText: 'Search for products',
-                prefixIcon: Icon(
-                  Icons.search,
-                  color: theme.colorScheme.onSurface,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-            ),
-          ),
-        //Bottom bar
-        DecoratedBox(
-          decoration: BoxDecoration(
-            color: theme.colorScheme.primary,
-            border: Border.symmetric(
-              horizontal: BorderSide(color: theme.dividerColor),
-            ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
+    return Padding(
+      padding: const EdgeInsets.only(top: 40.0, left: 10, right: 10),
+      child: Column(
+        children: [
+          //Logo and address section
+          Container(
+            color: Colors.white,
+            margin: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Image.asset('assets/images/Logo.png', height: 30),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'DELIVERY ADDRESS',
+                      style: textStyleBlack.copyWith(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black54,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      address,
+                      textAlign: TextAlign.center,
+                      style: textStyleBlack.copyWith(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ],
+                ),
+                svgIcon(assetName: 'notification', size: 24),
+              ],
+            ),
+          ),
+          //Search bar section
+          if (showSearchBar) ...[
+            SizedBox(height: 10),
+            Container(
+              margin: const EdgeInsets.only(left: 8, right: 5, top: 15),
+              height: 36,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey.shade300, width: 1.0),
+              ),
+              child: TextField(
+                decoration: InputDecoration(
+                  // filled: true,
+                  // fillColor: Colors.grey.shade200,
+                  hintText: 'Search',
+                  hintStyle: textStyleBlack.copyWith(
+                    fontSize: 14,
+                    color: Colors.grey.shade300,
+                  ),
+                  prefixIcon: Icon(Icons.search, color: Colors.grey.shade100),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+            ),
+          ],
+
+          SizedBox(height: 10),
+
+          //Bottom bar
+          Container(
+            height: 44,
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.symmetric(
+                horizontal: BorderSide(color: Colors.grey.shade300, width: 1.0),
+              ),
+            ),
+
+            child: Row(
               children: [
                 GestureDetector(
                   onTap: () {},
                   child: Icon(
                     Icons.arrow_back_ios_new,
-                    color: theme.colorScheme.onPrimary,
-                    size: 24,
+                    color: Colors.black,
+                    size: 16,
                   ),
                 ),
+                SizedBox(width: 10),
                 Text(
                   pageName,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    color: theme.colorScheme.onPrimary,
-                    fontWeight: FontWeight.bold,
+                  style: textStyleBlack.copyWith(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ],
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
