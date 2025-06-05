@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mini_mart_app/common/models/product_model.dart';
+import 'package:mini_mart_app/common/utils/notifier.dart';
 import 'package:mini_mart_app/common/utils/text_styles.dart';
 import 'package:mini_mart_app/common/widgets/app_button.dart';
+import 'package:mini_mart_app/common/widgets/toast_widget.dart';
 import 'package:mini_mart_app/features/cart/view/cart_view.dart';
 import 'package:mini_mart_app/features/home/common/widgets/header.dart';
 
@@ -150,9 +152,20 @@ class ProductDetailView extends StatelessWidget {
       bottomSheet: Container(
         color: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        child: AppButton(buttonName: 'Add to cart', onPressed: () {
-          context.push(CartView.routeName);
-        }),
+        child: AppButton(
+          buttonName: 'Add to cart',
+          onPressed: () {
+            Notifier.showNotifier(
+              context,
+              type: NotificationType.messenger,
+              content: ToastWidget(
+                onDismiss: () {
+                  Notifier.removeNotifier();
+                },
+              ),
+            );
+          },
+        ),
       ),
     );
   }

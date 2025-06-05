@@ -58,9 +58,7 @@ class Header extends StatelessWidget {
             ),
           ),
           //Search bar section
-          if (showSearchBar) ...[
-            SizedBox(height: 10),
-            Container(
+           showSearchBar ? Container(
               margin: const EdgeInsets.only(left: 8, right: 5, top: 15),
               height: 36,
               decoration: BoxDecoration(
@@ -84,8 +82,7 @@ class Header extends StatelessWidget {
                   ),
                 ),
               ),
-            ),
-          ],
+            ): SizedBox(height: 36),
 
           SizedBox(height: 10),
 
@@ -107,7 +104,7 @@ class Header extends StatelessWidget {
                   child: Icon(
                     Icons.arrow_back_ios_new,
                     color: Colors.black,
-                    size: 16,
+                    size: 12,
                   ),
                 ),
                 SizedBox(width: 10),

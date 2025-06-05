@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
- 
-enum OverlayType { modal, messenger, notification }
 
-//A notifier that leverages on flutter's overlay system to 
+enum NotificationType { modal, messenger, notification }
+
+//A notifier that leverages on flutter's overlay system to
 //display notifications, toasts, or modal dialogs with animations.
-
 
 class Notifier {
   static OverlayEntry? _overlayEntry;
@@ -15,14 +14,14 @@ class Notifier {
   /// Shows an overlay based on the type
   static void showNotifier(
     BuildContext context, {
-    required OverlayType type,
+    required NotificationType type,
     required Widget content,
     Duration duration = const Duration(seconds: 2),
   }) {
     if (_overlayEntry != null) return; // Prevent multiple overlays
 
     final overlay = Overlay.of(context);
- 
+
     _controller = AnimationController(
       vsync: Navigator.of(context),
       duration: const Duration(milliseconds: 800),
@@ -30,10 +29,7 @@ class Notifier {
 
     _opacityAnimation = Tween<double>(begin: 0, end: 1).animate(_controller);
     _slideAnimation = Tween<Offset>(
-      begin:
-          type == OverlayType.messenger
-              ? const Offset(0, 0.3)
-              : const Offset(0, -0.3),
+      begin: const Offset(0, -0.3),
       end: const Offset(0, 0),
     ).animate(_controller);
 
@@ -42,17 +38,15 @@ class Notifier {
         return FadeTransition(
           opacity: _opacityAnimation,
           child:
-              type == OverlayType.messenger
+              type == NotificationType.messenger
                   ? SlideTransition(
                     position: _slideAnimation,
                     child: _buildToast(content),
                   )
-                  :
-                   SlideTransition(
+                  : SlideTransition(
                     position: _slideAnimation,
                     child: _buildNotification(content),
-                  )
-                  
+                  ),
         );
       },
     );
@@ -60,13 +54,13 @@ class Notifier {
     overlay.insert(_overlayEntry!);
     _controller.forward();
 
-    if (type != OverlayType.modal) {
-      Future.delayed(duration, () => removeOverlay());
+    if (type != NotificationType.modal) {
+      Future.delayed(duration, () => removeNotifier());
     }
   }
 
   /// Removes the overlay with animation
-  static void removeOverlay() {
+  static void removeNotifier() {
     if (_overlayEntry == null) return;
 
     _controller.reverse().then((_) {
@@ -75,14 +69,12 @@ class Notifier {
     });
   }
 
-   
-
   /// Messenger-style overlay (Bottom with slide effect)
   static Widget _buildToast(Widget content) {
     return Stack(
       children: [
         Positioned(
-          bottom: 50,
+          top: 50,
           left: 20,
           right: 20,
           child: Material(color: Colors.transparent, child: content),

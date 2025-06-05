@@ -15,7 +15,7 @@ class HomeView extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(160),
+        preferredSize: const Size.fromHeight(140),
         child: Header(
           pageName: 'Technology',
           address: 'GRA, Port Harcourt, rivers',

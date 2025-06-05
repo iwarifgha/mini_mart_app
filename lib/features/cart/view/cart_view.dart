@@ -15,7 +15,7 @@ class CartView extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(100),
+        preferredSize: const Size.fromHeight(125),
         child: Header(
           pageName: 'Your cart',
           address: 'GRA, Port Harcourt, rivers',
@@ -47,12 +47,7 @@ class CartView extends StatelessWidget {
       bottomSheet: Container(
         color: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        child: AppButton(
-          buttonName: 'Checkout (\$2453)',
-          onPressed: () {
-            context.push(CartView.routeName);
-          },
-        ),
+        child: AppButton(buttonName: 'Checkout (\$2453)', onPressed: () {}),
       ),
     );
   }
