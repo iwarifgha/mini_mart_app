@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mini_mart_app/common/utils/text_styles.dart';
 import 'package:mini_mart_app/common/widgets/app_button.dart';
 import 'package:mini_mart_app/features/cart/common/cart_info_box.dart';
 import 'package:mini_mart_app/features/cart/common/cart_item_card.dart';
+import 'package:mini_mart_app/features/cart/state/cart_state.dart';
 import 'package:mini_mart_app/features/home/common/widgets/header.dart';
-import 'package:mini_mart_app/services/product_list.dart';
 
-class CartView extends StatelessWidget {
+class CartView extends ConsumerWidget {
   static const String routeName = '/cart';
   const CartView({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cart = ref.watch(cartStateProvider);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(125),
+        preferredSize: const Size.fromHeight(130),
         child: Header(
           pageName: 'Your cart',
           address: 'GRA, Port Harcourt, rivers',
@@ -27,16 +31,37 @@ class CartView extends StatelessWidget {
       ),
       body: ListView.separated(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 100), // ← extra bottom
-        itemCount: cartItems.length + 1, // +1 for total section
+        itemCount: cart.items.length + 1, // +1 for order info section
         separatorBuilder: (_, __) => const SizedBox(height: 16),
         itemBuilder: (context, index) {
-          if (index < cartItems.length) {
-            final item = cartItems[index];
+          if (cart.items.isEmpty) {
+            return Center(
+              child: Text(
+                'No items in cart',
+                style: textStyleBlack.copyWith(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            );
+          }
+          if (index < cart.items.length) {
+            //show cart items only if the item index is less than the total cart length
+            final item = cart.items[index];
             return CartItemCard(
               cartItem: item,
-              onAdd: () {},
-              onRemove: () {},
-              onDelete: () {},
+              onAdd: () {
+                // Handle add action
+                ref.read(cartStateProvider.notifier).increaseQuantity(item.id);
+              },
+              onRemove: () {
+                // Handle remove action
+                ref.read(cartStateProvider.notifier).decreaseQuantity(item.id);
+              },
+              onDelete: () {
+                // Handle delete action
+                ref.read(cartStateProvider.notifier).removeFromCart(item.id);
+              },
             );
           } else {
             // Total section
@@ -44,11 +69,20 @@ class CartView extends StatelessWidget {
           }
         },
       ),
-      bottomSheet: Container(
-        color: Colors.white,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        child: AppButton(buttonName: 'Checkout (\$2453)', onPressed: () {}),
-      ),
+      bottomSheet:
+          cart.items.isNotEmpty
+              ? Container(
+                color: Colors.white,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 16,
+                ),
+                child: AppButton(
+                  buttonName: 'Checkout (\$${cart.totalPrice})',
+                  onPressed: () {},
+                ),
+              )
+              : SizedBox.shrink(),
     );
   }
 }

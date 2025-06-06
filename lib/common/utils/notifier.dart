@@ -5,7 +5,7 @@ enum NotificationType { modal, messenger, notification }
 //A notifier that leverages on flutter's overlay system to
 //display notifications, toasts, or modal dialogs with animations.
 
-class Notifier {
+class AppNotifier {
   static OverlayEntry? _overlayEntry;
   static late AnimationController _controller;
   static late Animation<double> _opacityAnimation;

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mini_mart_app/common/utils/functions.dart';
 import 'package:mini_mart_app/features/cart/models/cart_item_model.dart';
+import 'package:mini_mart_app/features/cart/state/cart_state.dart';
 
-class CartItemCard extends StatelessWidget {
+class CartItemCard extends ConsumerWidget {
   final CartItemModel cartItem;
   final VoidCallback onAdd;
   final VoidCallback onRemove;
@@ -18,7 +20,9 @@ class CartItemCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+        final cart = ref.watch(cartStateProvider);
+
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
       padding: const EdgeInsets.all(12),
@@ -54,7 +58,7 @@ class CartItemCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '\$${cartItem.price.toStringAsFixed(2)}',
+                  '\$${cartItem.totalPrice.toStringAsFixed(2)}',
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,

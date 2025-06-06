@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mini_mart_app/common/utils/text_styles.dart';
+import 'package:mini_mart_app/features/cart/state/cart_state.dart';
 
-class CartInfoBox extends StatelessWidget {
+class CartInfoBox extends ConsumerWidget {
   const CartInfoBox({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cart = ref.watch(cartStateProvider);
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
       decoration: BoxDecoration(
@@ -34,7 +37,7 @@ class CartInfoBox extends StatelessWidget {
                 ),
               ),
               Text(
-                '\$100.00', // Replace with your total price logic
+                '\$${cart.totalPrice}', // Replace with your total price logic
                 style: textStyleBlack.copyWith(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
@@ -54,7 +57,7 @@ class CartInfoBox extends StatelessWidget {
                 ),
               ),
               Text(
-                '\$100.00',
+                '\$0.00',
                 style: textStyleBlack.copyWith(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
@@ -74,7 +77,7 @@ class CartInfoBox extends StatelessWidget {
                 ),
               ),
               Text(
-                'Total \$100.00', // Replace with your total price logic
+                '\$${cart.totalPrice.toStringAsFixed(2)}', // Replace with your total price logic
                 style: textStyleBlack.copyWith(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,

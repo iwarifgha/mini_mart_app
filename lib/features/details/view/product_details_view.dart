@@ -1,27 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mini_mart_app/common/models/product_model.dart';
 import 'package:mini_mart_app/common/utils/notifier.dart';
 import 'package:mini_mart_app/common/utils/text_styles.dart';
 import 'package:mini_mart_app/common/widgets/app_button.dart';
 import 'package:mini_mart_app/common/widgets/toast_widget.dart';
+import 'package:mini_mart_app/features/cart/models/cart_item_model.dart';
+import 'package:mini_mart_app/features/cart/state/cart_state.dart';
 import 'package:mini_mart_app/features/cart/view/cart_view.dart';
+import 'package:mini_mart_app/features/favorite/state/favorite_state.dart';
 import 'package:mini_mart_app/features/home/common/widgets/header.dart';
 
-class ProductDetailView extends StatelessWidget {
+class ProductDetailView extends ConsumerWidget {
   static const String routeName = '/product-details';
   final ProductModel product;
 
   const ProductDetailView({super.key, required this.product});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final favorites = ref.watch(favoriteStateProvider);
 
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(160),
+        preferredSize: const Size.fromHeight(130),
         child: Header(
           pageName: 'Go back',
           address: 'GRA, Port Harcourt, rivers',
@@ -58,17 +63,23 @@ class ProductDetailView extends StatelessWidget {
                 right: 30,
                 child: InkWell(
                   onTap: () {
-                    product.isFavorited = !product.isFavorited;
+                    print('tapped fav');
+                    ref
+                        .read(favoriteStateProvider.notifier)
+                        .toggleFavorite(product);
                   },
                   borderRadius: BorderRadius.circular(24),
                   child: CircleAvatar(
                     radius: 18,
                     backgroundColor: Colors.white,
                     child: Icon(
-                      product.isFavorited
+                      favorites.items.contains(product)
                           ? Icons.favorite
                           : Icons.favorite_border,
-                      color: product.isFavorited ? Colors.red : Colors.black54,
+                      color:
+                          favorites.items.contains(product)
+                              ? Colors.red
+                              : Colors.black54,
                       size: 20,
                     ),
                   ),
@@ -155,12 +166,23 @@ class ProductDetailView extends StatelessWidget {
         child: AppButton(
           buttonName: 'Add to cart',
           onPressed: () {
-            Notifier.showNotifier(
+            ref
+                .read(cartStateProvider.notifier)
+                .addToCart(
+                  CartItemModel(
+                    productImageUrl: product.imageUrl,
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    quantity: 1,
+                  ),
+                );
+            AppNotifier.showNotifier(
               context,
               type: NotificationType.messenger,
               content: ToastWidget(
                 onDismiss: () {
-                  Notifier.removeNotifier();
+                  AppNotifier.removeNotifier();
                 },
               ),
             );

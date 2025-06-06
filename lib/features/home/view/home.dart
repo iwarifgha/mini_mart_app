@@ -4,7 +4,7 @@ import 'package:mini_mart_app/common/utils/text_styles.dart';
 import 'package:mini_mart_app/common/widgets/product_card.dart';
 import 'package:mini_mart_app/features/details/view/product_details_view.dart';
 import 'package:mini_mart_app/features/home/common/widgets/header.dart';
-import 'package:mini_mart_app/services/product_list.dart';
+import 'package:mini_mart_app/services/data.dart';
 
 class HomeView extends StatelessWidget {
   static const String routeName = '/home';
